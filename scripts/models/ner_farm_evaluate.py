@@ -2,6 +2,7 @@ import os
 import logging
 from pathlib import Path
 import pprint
+import json
 
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import NERProcessor
@@ -23,6 +24,10 @@ else:
     use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/GermEval2014/"
 MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-germeval2014"
+REPORT_DIR = BASE_DIR + "reports/"
+
+project = "germeval2014"
+report_id = "001"
 
 
 def evaluate_ner():
@@ -44,7 +49,7 @@ def evaluate_ner():
     data_dir = Path(DATA_DIR)
     evaluation_filename = "test.txt"
     label_list = ["PER", "ORG", "LOC", "OTH"]
-    metric = "f1_macro"
+    metric = "seq_f1"
 
     # 1.Create a tokenizer
     print("# 1. Create a tokenizer")
@@ -91,9 +96,12 @@ def evaluate_ner():
 
     # 6. Run the Evaluator
     results = evaluator.eval(model)
-    f1_score = results[0]["f1_macro"]
-    print("Macro-averaged F1-Score:", f1_score)
+    # f1_score = results[0]["f1_macro"]
+    # print("Macro-averaged F1-Score:", f1_score)
     pprint.pprint(results)
+    report_name = REPORT_DIR + "ner_farm_" + project + "_" + report_id + ".json"
+    with open(report_name, 'w') as fh:
+        json.dump(results, fh, indent=2)
 
 
 if __name__ == "__main__":
