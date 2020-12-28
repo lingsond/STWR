@@ -22,12 +22,16 @@ if os.name == 'nt':
 else:
     BASE_DIR = "/home/stud/wangsadirdja/STWR/"
     use_cuda = True
-DATA_DIR = BASE_DIR + "data/03_processed/GermEval2014/"
-MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-germeval2014"
+DATA_DIR = BASE_DIR + "data/03_processed/CoNLL2003/"
+MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-conll2003-en"
 REPORT_DIR = BASE_DIR + "reports/"
 
-project = "germeval2014"
+project = "conll2003"
 report_id = "001"
+lang_model = MODEL_DIR
+ner_labels = ["[PAD]", "X", "O", "B-MISC", "I-MISC", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
+evaluation_filename = "test.txt"
+delimiter = " "
 
 
 def evaluate_ner():
@@ -43,12 +47,10 @@ def evaluate_ner():
     use_amp = None
     device, n_gpu = initialize_device_settings(use_cuda=use_cuda, use_amp=use_amp)
     batch_size = 100
-    lang_model = "bert-base-german-cased"
     do_lower_case = False
 
     data_dir = Path(DATA_DIR)
-    evaluation_filename = "test.txt"
-    label_list = ["PER", "ORG", "LOC", "OTH"]
+    # label_list = ["PER", "ORG", "LOC", "OTH"]
     metric = "seq_f1"
 
     # 1.Create a tokenizer
@@ -61,13 +63,12 @@ def evaluate_ner():
     print("# 2. Create a DataProcessor")
     # See test/sample/ner/train-sample.txt for an example of the data format that is expected by the Processor
     # ner_labels = ["[PAD]", "X", "O", "B-MISC", "I-MISC", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
-    ner_labels = ["[PAD]", "X", "O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
 
     processor = NERProcessor(
         tokenizer=tokenizer,
         max_seq_len=128,
         data_dir=data_dir,
-        delimiter="\t",
+        delimiter=delimiter,
         metric=metric,
         label_list=ner_labels,
         train_filename=None,
