@@ -36,7 +36,7 @@ def ner():
     use_amp = None
     device, n_gpu = initialize_device_settings(use_cuda=True, use_amp=use_amp)
     n_epochs = 4
-    batch_size = 1
+    batch_size = 32
     evaluate_every = 400
     lang_model = "bert-base-cased"
     do_lower_case = False
@@ -55,7 +55,8 @@ def ner():
     )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
-    data_silo = DataSilo(processor=processor, batch_size=batch_size)
+    data_loader_worker = 15
+    data_silo = DataSilo(processor=processor, batch_size=batch_size, max_processes=data_loader_worker)
 
     # 4. Create an AdaptiveModel
     # a) which consists of a pretrained language model as a basis

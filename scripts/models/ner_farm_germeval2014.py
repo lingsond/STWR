@@ -16,8 +16,10 @@ from farm.utils import set_all_seeds, initialize_device_settings
 
 if os.name == 'nt':
     BASE_DIR = "C:/My Projects/Python/STWR/"
+    use_cuda = False
 else:
     BASE_DIR = "/home/stud/wangsadirdja/STWR/"
+    use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/GermEval2014/"
 MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-germeval2014"
 
@@ -34,31 +36,36 @@ def ner():
     ##########################
     set_all_seeds(seed=42, deterministic_cudnn=True)
     use_amp = None
-    device, n_gpu = initialize_device_settings(use_cuda=True, use_amp=use_amp)
+    device, n_gpu = initialize_device_settings(use_cuda=use_cuda, use_amp=use_amp)
     n_epochs = 4
-    batch_size = 1
+    batch_size = 32
     evaluate_every = 400
     lang_model = "bert-base-german-cased"
     do_lower_case = False
 
     # 1.Create a tokenizer
+    print("# 1. Create a tokenizer")
     tokenizer = Tokenizer.load(
         pretrained_model_name_or_path=lang_model, do_lower_case=do_lower_case
     )
 
     # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
+    print("# 2. Create a DataProcessor")
     # See test/sample/ner/train-sample.txt for an example of the data format that is expected by the Processor
     # ner_labels = ["[PAD]", "X", "O", "B-MISC", "I-MISC", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
     ner_labels = ["[PAD]", "X", "O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
 
     processor = NERProcessor(
-        tokenizer=tokenizer, max_seq_len=128, data_dir=Path(DATA_DIR), delimiter=" ", metric="seq_f1", label_list=ner_labels
+        tokenizer=tokenizer, max_seq_len=128, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
-    data_silo = DataSilo(processor=processor, batch_size=batch_size)
+    print("# 3. Create a DataSilo")
+    data_loader_worker = 15
+    data_silo = DataSilo(processor=processor, batch_size=batch_size, max_processes=data_loader_worker)
 
     # 4. Create an AdaptiveModel
+    print("# 4. Create an AdaptiveModel")
     # a) which consists of a pretrained language model as a basis
     language_model = LanguageModel.load(lang_model)
     # b) and a prediction head on top that is suited for our task => NER
@@ -73,6 +80,7 @@ def ner():
     )
 
     # 5. Create an optimizer
+    print("# 5. Create an Optimizer")
     model, optimizer, lr_schedule = initialize_optimizer(
         model=model,
         learning_rate=1e-5,
@@ -82,6 +90,7 @@ def ner():
     )
 
     # 6. Feed everything to the Trainer, which keeps care of growing our model into powerful plant and evaluates it from time to time
+    print("# 6. Create a Trainer")
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
@@ -94,15 +103,18 @@ def ner():
     )
 
     # 7. Let it grow
+    print("# 7. Train!")
     trainer.train()
 
     # 8. Hooray! You have a model. Store it:
+    print("# 8. Save the model")
     save_dir = MODEL_DIR
     model.save(save_dir)
     processor.save(save_dir)
 
 
     # 9. Load it & harvest your fruits (Inference)
+    print("# 9. Test the model")
     basic_texts = [
         {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
         {"text": "Martin Müller spielt Handball in Berlin"},
