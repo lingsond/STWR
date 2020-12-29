@@ -105,5 +105,30 @@ def evaluate_ner():
         json.dump(results, fh, indent=2)
 
 
+def load_test_data(task_name: str, delimiter: str = '\t', label_column_name: str = None):
+    if task_name == 'ner':
+        test_file = DATA_DIR + evaluation_filename
+        with open(test_file, 'r', encoding='utf-8') as fh:
+            page = fh.readlines()
+        test_data = []
+        test_label = []
+    df = pd.read_csv(test_file, sep='\t')
+    test_data = df['text'].values.tolist()
+    test_label = df[label_column_name].values.tolist()
+
+    basic_texts = []
+    for text in test_data:
+        basic_texts.append({"text": text})
+    return basic_texts, test_label
+
+
+def infer_ner():
+    model = Inferencer.load(MODEL_DIR)
+    result = model.inference_from_dicts(dicts=basic_texts)
+    print(result)
+
+    model.close_multiprocessing_pool()
+
+
 if __name__ == "__main__":
     evaluate_ner()

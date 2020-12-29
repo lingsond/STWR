@@ -2,6 +2,8 @@
 import os
 import logging
 from pathlib import Path
+import pprint
+import json
 
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import NERProcessor
@@ -102,17 +104,24 @@ def ner():
     processor.save(save_dir)
 
 
+def infer_conll():
     # 9. Load it & harvest your fruits (Inference)
     basic_texts = [
         {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
         {"text": "Martin Müller spielt Handball in Berlin"},
     ]
-    model = Inferencer.load(save_dir)
-    result = model.inference_from_dicts(dicts=basic_texts)
-    print(result)
+    model = Inferencer.load(MODEL_DIR)
+    result1 = model.inference_from_dicts(dicts=basic_texts)
+    result2 = model.inference_from_file(DATA_DIR + 'test.txt')
+    # pprint.pprint(result2)
+    with open("test_infer1.json", 'w') as fh:
+        json.dump(result1, fh, indent=2)
+    with open("test_infer2.json", 'w') as fh:
+        json.dump(result2, fh, indent=2)
 
     model.close_multiprocessing_pool()
 
 
 if __name__ == "__main__":
-    ner()
+    # ner()
+    infer_conll()
