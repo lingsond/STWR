@@ -110,14 +110,14 @@ def infer_conll():
         {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
         {"text": "Martin Müller spielt Handball in Berlin"},
     ]
-    model = Inferencer.load(MODEL_DIR)
+    model = Inferencer.load(MODEL_DIR, batch_size=100)
     result1 = model.inference_from_dicts(dicts=basic_texts)
-    result2 = model.inference_from_file(DATA_DIR + 'test.txt')
-    # pprint.pprint(result2)
+    # result2 = model.inference_from_file(DATA_DIR + 'test.txt')
+    pprint.pprint(result1[0])
     with open("test_infer1.json", 'w') as fh:
-        json.dump(result1, fh, indent=2)
-    with open("test_infer2.json", 'w') as fh:
-        json.dump(result2, fh, indent=2)
+        fh.write(pprint.pformat(result1, indent=2))
+    # with open("test_infer2.json", 'w') as fh:
+    #     json.dump(result2, fh, indent=2)
 
     model.close_multiprocessing_pool()
 

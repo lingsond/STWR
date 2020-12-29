@@ -1,0 +1,8 @@
+[
+  {
+    "loss": 0.5536023102383147,
+    "task_name": "ner",
+    "seq_f1": 0.9399682074618958,
+    "report": "           precision    recall  f1-score   support\n\n      PER       0.97      0.98      0.97     10028\n      LOC       0.96      0.97      0.97     10750\n      OTH       0.87      0.87      0.87      3990\n      ORG       0.91      0.93      0.92      6901\n\nmicro avg       0.93      0.95      0.94     31669\nmacro avg       0.94      0.95      0.95     31669\n"
+  }
+]
