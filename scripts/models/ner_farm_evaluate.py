@@ -1,20 +1,21 @@
 import os
 import logging
 from pathlib import Path
+from tqdm import tqdm
 import pprint
 import json
 
-from farm.data_handler.data_silo import DataSilo
-from farm.data_handler.processor import NERProcessor
-from farm.modeling.optimization import initialize_optimizer
-from farm.infer import Inferencer
-from farm.modeling.adaptive_model import AdaptiveModel
-from farm.modeling.language_model import LanguageModel
-from farm.modeling.prediction_head import TokenClassificationHead
-from farm.modeling.tokenization import Tokenizer
-from farm.train import Trainer
-from farm.utils import set_all_seeds, initialize_device_settings
-from farm.eval import Evaluator
+# from farm.data_handler.data_silo import DataSilo
+# from farm.data_handler.processor import NERProcessor
+# from farm.modeling.optimization import initialize_optimizer
+# from farm.infer import Inferencer
+# from farm.modeling.adaptive_model import AdaptiveModel
+# from farm.modeling.language_model import LanguageModel
+# from farm.modeling.prediction_head import TokenClassificationHead
+# from farm.modeling.tokenization import Tokenizer
+# from farm.train import Trainer
+# from farm.utils import set_all_seeds, initialize_device_settings
+# from farm.eval import Evaluator
 
 if os.name == 'nt':
     BASE_DIR = "C:/My Projects/Python/STWR/"
@@ -22,16 +23,16 @@ if os.name == 'nt':
 else:
     BASE_DIR = "/home/stud/wangsadirdja/STWR/"
     use_cuda = True
-DATA_DIR = BASE_DIR + "data/03_processed/CoNLL2003/"
-MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-conll2003-en"
+DATA_DIR = BASE_DIR + "data/03_processed/GermEval2014/"
+MODEL_DIR = BASE_DIR + "models/farm-ner-tutorial-germeval2014"
 REPORT_DIR = BASE_DIR + "reports/"
 
-project = "conll2003"
+project = "germeval2014"
 report_id = "001"
 lang_model = MODEL_DIR
 ner_labels = ["[PAD]", "X", "O", "B-MISC", "I-MISC", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-OTH", "I-OTH"]
 evaluation_filename = "test.txt"
-delimiter = " "
+delimiter = "\t"
 
 
 def evaluate_ner():
@@ -105,30 +106,82 @@ def evaluate_ner():
         json.dump(results, fh, indent=2)
 
 
-def load_test_data(task_name: str, delimiter: str = '\t', label_column_name: str = None):
-    if task_name == 'ner':
-        test_file = DATA_DIR + evaluation_filename
-        with open(test_file, 'r', encoding='utf-8') as fh:
-            page = fh.readlines()
-        test_data = []
-        test_label = []
-    df = pd.read_csv(test_file, sep='\t')
-    test_data = df['text'].values.tolist()
-    test_label = df[label_column_name].values.tolist()
+def load_test_data_ner(sep: str = '\t', label_column_name: str = None):
+    # unwanted_labels = ['[PAD]', 'X', 'O']
+    # label_list = [x for x in labels if x not in unwanted_labels]
+    test_file = DATA_DIR + evaluation_filename
+    with open(test_file, 'r', encoding='utf-8') as fh:
+        page = fh.readlines()
+    test_data = []
+    predictions = []
+    sentence = []
+    current_start = 0
+    current_end = 0
+    start = 0
+    end = 0
+    final_label = ''
+    context = []
+    for line in tqdm(page):
+        if line.startswith('-DOCSTART-'):
+            continue
+        if line.strip() == '':
+            if len(sentence) > 0:
+                test_data.append(' '.join(sentence))
+                sentence = []
+                current_start = 0
+                current_end = 0
+        else:
+            temp = line.strip().split(sep)
+            word = temp[0]
+            current_label = temp[-1]
+            sentence.append(word)
+            if current_label == 'O':
+                if final_label != '':
+                    prediction = {
+                        'context': ' '.join(context),
+                        'start': start,
+                        'end': end,
+                        'label': final_label,
+                    }
+                    predictions.append(prediction)
+                    # Reset label
+                    final_label = ''
+            else:
+                label = current_label[2:]
+                if final_label != label:
+                    # Label has changed, save current prediction
+                    if final_label != '':
+                        end = current_end
+                        prediction = {
+                            'context': ' '.join(context),
+                            'start': start,
+                            'end': end,
+                            'label': final_label,
+                        }
+                        predictions.append(prediction)
+                    # Reset the label and start new prediction
+                    final_label = label
+                    start = current_start
+                    context.append(word)
 
-    basic_texts = []
-    for text in test_data:
-        basic_texts.append({"text": text})
-    return basic_texts, test_label
+            if len(sentence) <= 1:
+                end = start + len(word)
+            else:
+                start = end + 1
+                end = start + len(word)
+
+    with open("test_data.txt", 'w') as fh:
+        fh.write(pprint.pformat(test_data))
 
 
 def infer_ner():
     model = Inferencer.load(MODEL_DIR)
-    result = model.inference_from_dicts(dicts=basic_texts)
-    print(result)
+    #result = model.inference_from_dicts(dicts=basic_texts)
+    #print(result)
 
     model.close_multiprocessing_pool()
 
 
 if __name__ == "__main__":
-    evaluate_ner()
+    # evaluate_ner()
+    load_test_data_ner(sep=delimiter)
