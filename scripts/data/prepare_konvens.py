@@ -116,21 +116,6 @@ def convert_to_farm_ner():
                 fh.write(line + '\n')
 
 
-def check_trainset():
-    # It turns out that in the original train set, there are some null elements
-    # and causing an error because the split data become shorter than 9 elements.
-    # These faulty sentences were deleted manually.
-    # This method is only to find those data causing the error.
-    filename = BASE_DIR + "02_interim/Konvens2020/" + 'train.tsv'
-    with open(filename, 'r', encoding='utf-8') as fh:
-        page = fh.readlines()
-
-    for i, line in enumerate(page):
-        text = line.strip().split('\t')
-        if len(text) < 8:
-            print(i)
-
-
 def finalize_farm_ner():
     # In the temporary datasets, the labels are only set as DIR, IND, REP, and O.
     # Here, the labels are marked to comply with the IOB format.
@@ -170,6 +155,24 @@ def finalize_farm_ner():
                 fh.write(line + '\n')
 
 
+def check_trainset():
+    # It turns out that in the original train set, there are some null elements
+    # and causing an error because the split data become shorter than 9 elements.
+    # These faulty sentences were deleted manually.
+    # This method is only to find those data causing the error.
+    # filename = BASE_DIR + "02_interim/Konvens2020/" + 'train.tsv'
+    filename = BASE_DIR + "03_processed/Konvens2020/" + 'train.txt'
+    with open(filename, 'r', encoding='utf-8') as fh:
+        page = fh.readlines()
+
+    for i, line in enumerate(page):
+        if line.strip() == '':
+            continue
+        text = line.strip().split('\t')
+        if len(text) < 4:
+            print(i)
+
+
 def main():
     # 01. Combine split raw data into one file in 02_interim
     # combine_raw_to_interim()
@@ -180,4 +183,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    check_trainset()

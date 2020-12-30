@@ -17,8 +17,10 @@ from farm.utils import set_all_seeds, initialize_device_settings
 
 if os.name == 'nt':
     BASE_DIR = "C:/My Projects/Python/STWR/"
+    use_cuda = False
 else:
     BASE_DIR = "/home/stud/wangsadirdja/STWR/"
+    use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/"
 MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020"
 
@@ -33,9 +35,9 @@ def ner():
     ##########################
     ########## Settings
     ##########################
-    set_all_seeds(seed=42, deterministic_cudnn=True)
+    set_all_seeds(seed=42, deterministic_cudnn=use_cuda)
     use_amp = None
-    device, n_gpu = initialize_device_settings(use_cuda=True, use_amp=use_amp)
+    device, n_gpu = initialize_device_settings(use_cuda=use_cuda, use_amp=use_amp)
     n_epochs = 4
     batch_size = 32
     evaluate_every = 400
