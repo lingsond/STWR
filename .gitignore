@@ -1,4 +1,4 @@
-models
+/tagger/rwtagger/models/
 
 # IntelliJ project files
 .idea
