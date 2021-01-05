@@ -104,8 +104,6 @@ def ner():
     model.save(save_dir)
     processor.save(save_dir)
 
-    model.close_multiprocessing_pool()
-
 
 def infer_conll():
     # 9. Load it & harvest your fruits (Inference)
