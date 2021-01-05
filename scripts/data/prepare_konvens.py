@@ -8,12 +8,21 @@ from sklearn.model_selection import train_test_split
 
 DATA_DIR = "C:/My Projects/Python/STWR/data/"
 BASE_DIR = "C:/My Projects/Python/STWR/data/"
-SOURCE_DIR = BASE_DIR + "01_raw/konvens-paper-2020/"
-# SOURCE_DIR = DATA_DIR
-TARGET_DIR = BASE_DIR + "02_interim/Konvens2020/"
-# TARGET_DIR = BASE_DIR + "03_processed/Konvens2020/"
+RAW_DIR = BASE_DIR + "01_raw/konvens-paper-2020/"
+INTERIM_DIR = BASE_DIR + "02_interim/Konvens2020/"
+TARGET_DIR = BASE_DIR + "03_processed/Konvens2020/"
 
 NER_LABELS_ORIGINAL = ['direct', 'indirect', 'reported', 'x']
+
+
+def get_file_list():
+    filename = RAW_DIR + 'train/indirect_combined.tsv'
+    with open(filename, 'r', encoding='utf-8') as fh:
+        page = fh.readlines()
+
+    files = [x.strip().split('\t')[-1] for x in page]
+    files = list(set(files))
+    return files
 
 
 def combine_raw_to_interim():
@@ -174,14 +183,16 @@ def check_trainset():
 
 
 def main():
+    files = get_file_list()
+    pprint.pprint(files)
     # 01. Combine split raw data into one file in 02_interim
     # combine_raw_to_interim()
     # 02. Convert interim data into FARM format for NER dataset
     # convert_to_farm_ner()
     # 03. Correcting the labels and adding the B- and I- markings
-    finalize_farm_ner()
+    # finalize_farm_ner()
 
 
 if __name__ == '__main__':
-    # main()
-    check_trainset()
+    main()
+    # check_trainset()
