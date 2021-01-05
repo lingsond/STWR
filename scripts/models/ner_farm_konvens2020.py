@@ -38,9 +38,9 @@ def ner():
     set_all_seeds(seed=42, deterministic_cudnn=use_cuda)
     use_amp = None
     device, n_gpu = initialize_device_settings(use_cuda=use_cuda, use_amp=use_amp)
-    n_epochs = 4
-    batch_size = 32
-    evaluate_every = 400
+    n_epochs = 10
+    batch_size = 16
+    evaluate_every = 1000
     lang_model = "bert-base-german-cased"
     do_lower_case = False
 
@@ -54,7 +54,7 @@ def ner():
     ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
 
     processor = NERProcessor(
-        tokenizer=tokenizer, max_seq_len=128, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
+        tokenizer=tokenizer, max_seq_len=256, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
