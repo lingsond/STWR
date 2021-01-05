@@ -39,9 +39,10 @@ def ner():
     use_amp = None
     device, n_gpu = initialize_device_settings(use_cuda=use_cuda, use_amp=use_amp)
     n_epochs = 10
-    batch_size = 16
+    batch_size = 32
     evaluate_every = 1000
-    lang_model = "bert-base-german-cased"
+    # lang_model = "bert-base-german-cased"
+    lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
     do_lower_case = False
 
     # 1.Create a tokenizer
