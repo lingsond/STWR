@@ -253,4 +253,5 @@ letzten	letzter	ADJA	I-DIR
 Zuge	Zug	NN	I-DIR
 wieder	wieder	ADV	I-DIR
 zurück	zurück	PTKVZ	I-DIR
-.	--	$.	I-DIR
+.	O	O	I-DIR
+
