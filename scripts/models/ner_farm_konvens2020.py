@@ -55,7 +55,7 @@ def ner():
     ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
 
     processor = NERProcessor(
-        tokenizer=tokenizer, max_seq_len=256, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
+        tokenizer=tokenizer, max_seq_len=64, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
