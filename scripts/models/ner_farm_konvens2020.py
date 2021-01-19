@@ -26,7 +26,6 @@ MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020"
 
 
 def ner(task: str):
-    model_dir = MODEL_DIR + '_' + task
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -43,7 +42,13 @@ def ner(task: str):
     batch_size = 32
     evaluate_every = 1000
     # lang_model = "bert-base-german-cased"
+    model_dir = MODEL_DIR
+    # lang_model = "bert-base-historical-german-rw-cased"
+    # model_dir += '_bert-hgrw'
     lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
+    model_dir += '_lmgot01'
+    if task != '':
+        model_dir += '_' + task
     do_lower_case = False
 
     # 1.Create a tokenizer
@@ -57,10 +62,14 @@ def ner(task: str):
         ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR"]
     elif task == 'indirect':
         ner_labels = ["[PAD]", "X", "O", "B-IND", "I-IND"]
-    else:
+    elif task == 'reported':
         ner_labels = ["[PAD]", "X", "O", "B-REP", "I-REP"]
+    else:
+        ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
 
-    data_dir = DATA_DIR + task + '/'
+    data_dir = DATA_DIR
+    if task != '':
+        data_dir += task + '/'
     processor = NERProcessor(
         tokenizer=tokenizer, max_seq_len=64, data_dir=Path(data_dir), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
@@ -132,5 +141,6 @@ def infer_conll():
 
 
 if __name__ == "__main__":
+    # Parameter can be '', 'direct', 'indirect', 'reported'
     ner('direct')
     # infer_conll()
