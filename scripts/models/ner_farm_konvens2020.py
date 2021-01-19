@@ -26,6 +26,7 @@ MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020"
 
 
 def ner(task: str):
+    model_dir = MODEL_DIR + '_' + task
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -107,7 +108,7 @@ def ner(task: str):
     trainer.train()
 
     # 8. Hooray! You have a model. Store it:
-    save_dir = MODEL_DIR
+    save_dir = model_dir
     model.save(save_dir)
     processor.save(save_dir)
 
