@@ -131,5 +131,5 @@ def infer_conll():
 
 
 if __name__ == "__main__":
-    ner()
+    ner('direct')
     # infer_conll()
