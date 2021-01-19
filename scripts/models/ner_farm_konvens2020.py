@@ -26,7 +26,7 @@ DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/"
 MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020"
 
 
-def ner(task: str):
+def ner(task: str, lm: str):
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -42,12 +42,15 @@ def ner(task: str):
     n_epochs = 10
     batch_size = 32
     evaluate_every = 1000
-    # lang_model = "bert-base-german-cased"
     model_dir = MODEL_DIR
-    # lang_model = "bert-base-historical-german-rw-cased"
-    # model_dir += '_bert-hgrw'
-    lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
-    model_dir += '_lmgot01'
+    if lm == 'bert-hgcrw':
+        lang_model = "bert-base-historical-german-rw-cased"
+        model_dir += '_bert-hgcrw'
+    elif lm == 'lmgot01':
+        lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
+        model_dir += '_lmgot01'
+    else:
+        lang_model = "bert-base-german-cased"
     if task != 'all':
         model_dir += '_' + task
     do_lower_case = False
@@ -143,6 +146,8 @@ def infer_conll():
 
 if __name__ == "__main__":
     task = sys.argv[1]
-    # Parameter can be '', 'direct', 'indirect', 'reported'
-    ner(task)
+    lang_model = sys.argv[2]
+    # Parameter1 can be '', 'direct', 'indirect', 'reported'
+    # Parameter2 can be 'lmgot01', 'bert-hgcrw', 'bert-gc'
+    ner(task, lang_model)
     # infer_conll()
