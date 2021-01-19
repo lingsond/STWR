@@ -1,4 +1,5 @@
 import os
+import sys
 import logging
 from pathlib import Path
 import pprint
@@ -47,7 +48,7 @@ def ner(task: str):
     # model_dir += '_bert-hgrw'
     lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
     model_dir += '_lmgot01'
-    if task != '':
+    if task != 'all':
         model_dir += '_' + task
     do_lower_case = False
 
@@ -68,7 +69,7 @@ def ner(task: str):
         ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
 
     data_dir = DATA_DIR
-    if task != '':
+    if task != 'all':
         data_dir += task + '/'
     processor = NERProcessor(
         tokenizer=tokenizer, max_seq_len=64, data_dir=Path(data_dir), delimiter="\t", metric="seq_f1", label_list=ner_labels
@@ -141,6 +142,7 @@ def infer_conll():
 
 
 if __name__ == "__main__":
+    task = sys.argv[1]
     # Parameter can be '', 'direct', 'indirect', 'reported'
-    ner('direct')
+    ner(task)
     # infer_conll()
