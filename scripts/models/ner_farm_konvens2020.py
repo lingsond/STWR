@@ -49,6 +49,9 @@ def ner(task: str, lm: str):
     elif lm == 'lmgot01':
         lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
         model_dir += '_lmgot01'
+    elif lm == 'lmgot02':
+        lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_02")
+        model_dir += '_lmgot02'
     else:
         lang_model = "bert-base-german-cased"
     if task != 'all':
@@ -148,6 +151,6 @@ if __name__ == "__main__":
     task = sys.argv[1]
     lang_model = sys.argv[2]
     # Parameter1 can be '', 'direct', 'indirect', 'reported'
-    # Parameter2 can be 'lmgot01', 'bert-hgcrw', 'bert-gc'
+    # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     ner(task, lang_model)
     # infer_conll()
