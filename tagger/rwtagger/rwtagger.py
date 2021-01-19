@@ -60,7 +60,7 @@ if __name__ == "__main__":
                         action="store_true")
     args = parser.parse_args()
 
-    pipeline:Pipeline = pipeline.Pipeline(args.use_gpu, logging.INFO)
+    pipeline: Pipeline = pipeline.Pipeline(args.use_gpu, logging.INFO)
     # set default value for input chunk_len to 100
     chunk_len = 100
     # check for valid input for input_format

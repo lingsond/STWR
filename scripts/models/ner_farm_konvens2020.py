@@ -25,7 +25,7 @@ DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/"
 MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020"
 
 
-def ner():
+def ner(task: str):
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -52,10 +52,16 @@ def ner():
 
     # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
     # See test/sample/ner/train-sample.txt for an example of the data format that is expected by the Processor
-    ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
+    if task == 'direct':
+        ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR"]
+    elif task == 'indirect':
+        ner_labels = ["[PAD]", "X", "O", "B-IND", "I-IND"]
+    else:
+        ner_labels = ["[PAD]", "X", "O", "B-REP", "I-REP"]
 
+    data_dir = DATA_DIR + task + '/'
     processor = NERProcessor(
-        tokenizer=tokenizer, max_seq_len=64, data_dir=Path(DATA_DIR), delimiter="\t", metric="seq_f1", label_list=ner_labels
+        tokenizer=tokenizer, max_seq_len=64, data_dir=Path(data_dir), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
