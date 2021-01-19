@@ -44,7 +44,7 @@ def ner(task: str, lm: str):
     evaluate_every = 1000
     model_dir = MODEL_DIR
     if lm == 'bert-hgcrw':
-        lang_model = "bert-base-historical-german-rw-cased"
+        lang_model = "redewiedergabe/bert-base-historical-german-rw-cased"
         model_dir += '_bert-hgcrw'
     elif lm == 'lmgot01':
         lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_01")
