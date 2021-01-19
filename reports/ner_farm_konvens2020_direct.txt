@@ -1,11 +1,48 @@
 #### LMGOT01 ####
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                                                         ***************************************************
 ***** EVALUATION | TEST SET | AFTER 10620 BATCHES *****
-***************************************************
- _________ ner _________
-01/19/2021 13:27:14 - INFO - farm.eval -   loss: 17.550859649233356                                                                                                            01/19/2021 13:27:14 - INFO - farm.eval -   task_name: ner
-01/19/2021 13:27:14 - INFO - farm.eval -   seq_f1: 0.609967173977917                                                                                                           01/19/2021 13:27:14 - INFO - farm.eval -   report:
+01/19/2021 13:27:14 - INFO - farm.eval -   loss: 17.550859649233356
+01/19/2021 13:27:14 - INFO - farm.eval -   task_name: ner
+01/19/2021 13:27:14 - INFO - farm.eval -   seq_f1: 0.609967173977917
             precision    recall  f1-score   support
       DIR       0.58      0.72      0.65      1411
-micro avg       0.53      0.72      0.61      1411                                                                                                                             macro avg       0.58      0.72      0.65      1411
+micro avg       0.53      0.72      0.61      1411
 macro avg       0.58      0.72      0.65      1411
+
+#### LMGOT02 ####
+***** EVALUATION | TEST SET | AFTER 10620 BATCHES *****
+01/19/2021 15:37:31 - INFO - farm.eval -   loss: 18.361978199715928
+01/19/2021 15:37:31 - INFO - farm.eval -   task_name: ner
+01/19/2021 15:37:31 - INFO - farm.eval -   seq_f1: 0.6318347509113
+            precision    recall  f1-score   support
+      DIR       0.61      0.74      0.67      1411
+micro avg       0.55      0.74      0.63      1411
+macro avg       0.61      0.74      0.67      1411
+
+#### bert-base-historical-german-cased-rw ####
+***** EVALUATION | TEST SET | AFTER 10620 BATCHES *****
+01/19/2021 14:44:27 - INFO - farm.eval -   loss: 17.329938567873103
+01/19/2021 14:44:27 - INFO - farm.eval -   task_name: ner
+01/19/2021 14:44:28 - INFO - farm.eval -   seq_f1: 0.6362802080146834
+            precision    recall  f1-score   support
+      DIR       0.61      0.74      0.67      1411
+micro avg       0.56      0.74      0.64      1411
+macro avg       0.61      0.74      0.67      1411
+
+### bert-base-german-cased ####
+***** EVALUATION | TEST SET | AFTER 10620 BATCHES *****
+01/19/2021 16:26:30 - INFO - farm.eval -   loss: 18.928399963078096
+01/19/2021 16:26:30 - INFO - farm.eval -   task_name: ner
+01/19/2021 16:26:30 - INFO - farm.eval -   seq_f1: 0.6001807773425731
+01/19/2021 16:26:30 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.57      0.71      0.63      1411
+micro avg       0.52      0.71      0.60      1411
+macro avg       0.57      0.71      0.63      1411
+
+
+Summary for directed speech
+            precision    recall  f1-score   support
+LMGOT01         0.58      0.72      0.65      1411
+LMGOT02         0.61      0.74      0.67      1411
+bert-hgcrw      0.61      0.74      0.67      1411
+bert-gc         0.57      0.71      0.63      1411
