@@ -135,7 +135,7 @@ def fill_prediction_list(pred, real):
 
 def scoring_result():
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    pred_result = json_to_list("infer_ner_konvens2020_direct_lmgot01.json")
+    pred_result = json_to_list("infer_ner_konvens2020_direct_bert-gc.json")
     real_list = text_to_list(basic_texts)
     pred_text, pred_label = fill_prediction_list(pred_result, real_list)
 
@@ -179,5 +179,5 @@ if __name__ == "__main__":
     # Parameter1 can be '', 'direct', 'indirect', 'reported'
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
-    infer()
-    # scoring_result()
+    # infer()
+    scoring_result()

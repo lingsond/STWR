@@ -46,3 +46,11 @@ LMGOT01         0.58      0.72      0.65      1411
 LMGOT02         0.61      0.74      0.67      1411
 bert-hgcrw      0.61      0.74      0.67      1411
 bert-gc         0.57      0.71      0.63      1411
+
+
+Score using method used by rwtagger in the Redewiedergabe project/paper:
+            precision    recall  f1-score
+LMGOT01         0.74      0.70      0.72
+LMGOT02         0.74      0.71      0.72
+bert-hgcrw      0.75      0.72      0.74
+bert-gc         0.72      0.69      0.71
