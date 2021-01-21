@@ -27,8 +27,8 @@ else:
     use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/direct/"
 # MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_bert-hgcrw_direct"
-MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot01_direct"
-# MODEL_DIR = 'bert-base-german-cased'
+# MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot01_direct"
+MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_direct"
 
 
 def test_file_to_dict(testfile: str = 'test', extension: str = 'txt', sep: str = '\t'):
@@ -135,7 +135,7 @@ def fill_prediction_list(pred, real):
 
 def scoring_result():
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    pred_result = json_to_list("test_infer_01.json")
+    pred_result = json_to_list("infer_ner_konvens2020_direct_lmgot01.json")
     real_list = text_to_list(basic_texts)
     pred_text, pred_label = fill_prediction_list(pred_result, real_list)
 
@@ -164,7 +164,7 @@ def infer():
         result = model.inference_from_dicts(dicts=[text])
         results.append(result)
     # pprint.pprint(results)
-    filename = 'infer_ner_konvens2020_direct_lmgot01.json'
+    filename = 'infer_ner_konvens2020_direct_bert-gc.json'
     with open(filename, 'w', encoding='utf-8') as fh:
         fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
