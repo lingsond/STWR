@@ -82,10 +82,13 @@ def infer():
     # pprint.pprint(golden_label[:10])
     model = Inferencer.load(MODEL_DIR)
     # result1 = model.inference_from_dicts(dicts=basic_texts)
-    result = model.inference_from_dicts(dicts=basic_texts)
-    pprint.pprint(result[0:5])
-    with open("test_infer.json", 'w') as fh:
-        fh.write(pprint.pformat(result, indent=2))
+    results = []
+    for text in basic_texts[:10]:
+        result = model.inference_from_dicts(dicts=[text])
+        results.append(result)
+    pprint.pprint(results)
+    with open("test_infer_01.json", 'w') as fh:
+        fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
     #     json.dump(result, fh, indent=2)
 
