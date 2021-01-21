@@ -5,6 +5,8 @@ from pathlib import Path
 import pprint
 import json
 from ast import literal_eval
+import numpy as np
+import sklearn
 
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import NERProcessor
@@ -24,8 +26,8 @@ else:
     BASE_DIR = "/home/stud/wangsadirdja/STWR/"
     use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/direct/"
-MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_bert-hgcrw_direct"
-# MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot02_direct"
+# MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_bert-hgcrw_direct"
+MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot02_direct"
 # MODEL_DIR = 'bert-base-german-cased'
 
 
@@ -83,11 +85,70 @@ def json_to_list(filename: str) -> list:
             label = each['label']
             for token in tokens:
                 end = len(token) + start
-                start = end + 1
                 new_line.append([token, start, end, label])
+                start = end + 1
         new_results.append(new_line)
 
     return new_results
+
+
+def text_to_list(data):
+    text_list = [x['text'] for x in data]
+
+    new_results = []
+    for line in text_list:
+        tokens = line.split(' ')
+        start = 0
+        new_line = []
+        for token in tokens:
+            end = len(token) + start
+            new_line.append([token, start, end])
+            start = end + 1
+        new_results.append(new_line)
+
+    return new_results
+
+
+def fill_prediction_list(pred, real):
+    if len(pred) != len(real):
+        raise Exception("List have different length")
+    new_preds = []
+    for n in range(len(real)):
+        preds = pred[n]
+        current = 0
+        for token in real[n]:
+            if len(preds) == 0 or current >= len(preds) or token[0] != preds[current][0]:
+                new_token = token + ['O']
+                new_preds.append(new_token)
+            else:
+                new_preds.append(preds[current])
+                current += 1
+
+    pred_list = []
+    label_list = []
+    for preds in new_preds:
+        pred_list.append(preds[0])
+        label_list.append(preds[-1])
+
+    return pred_list, label_list
+
+
+def scoring_result():
+    basic_texts, golden_list, golden_label = test_file_to_dict()
+    pred_result = json_to_list("test_infer_01.json")
+    real_list = text_to_list(basic_texts)
+    pred_text, pred_label = fill_prediction_list(pred_result, real_list)
+
+    fscore = np.round(
+        sklearn.metrics.f1_score(pred_label, golden_label, pos_label='DIR'), 2)
+    precision = np.round(
+        sklearn.metrics.precision_score(pred_label, golden_label, pos_label='DIR'), 2)
+    recall = np.round(
+        sklearn.metrics.recall_score(pred_label, golden_label, pos_label='DIR'), 2)
+
+    print(f'FI Score : {fscore}')
+    print(f'Precision: {precision}')
+    print(f'Recall   : {recall}')
 
 
 def infer():
@@ -96,23 +157,15 @@ def infer():
         datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO,
     )
-    # 9. Load it & harvest your fruits (Inference)
-    # basic_texts = [
-    #     {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
-    #     {"text": "Martin Müller spielt Handball in Berlin"},
-    # ]
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    # pprint.pprint(basic_texts[:10])
-    # pprint.pprint(golden_list[:10])
-    # pprint.pprint(golden_label[:10])
     model = Inferencer.load(MODEL_DIR)
-    # result1 = model.inference_from_dicts(dicts=basic_texts)
     results = []
     for text in basic_texts:
         result = model.inference_from_dicts(dicts=[text])
         results.append(result)
-    pprint.pprint(results)
-    with open("test_infer_01.json", 'w') as fh:
+    # pprint.pprint(results)
+    filename = 'infer_ner_konvens2020_direct_lmgot02.json'
+    with open(filename, 'w') as fh:
         fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
     #     json.dump(result, fh, indent=2)
@@ -127,4 +180,4 @@ if __name__ == "__main__":
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
     infer()
-    # json_to_list("test_infer_01.json")
+    # scoring_result()
