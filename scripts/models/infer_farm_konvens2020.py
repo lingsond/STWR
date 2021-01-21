@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 import pprint
 import json
+from ast import literal_eval
 
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import NERProcessor
@@ -65,6 +66,30 @@ def test_file_to_dict(testfile: str = 'test', extension: str = 'txt', sep: str =
     return data, token_list, label_list
 
 
+def json_to_list(filename: str) -> list:
+    with open(filename, 'r', encoding='utf-8') as fh:
+        page = literal_eval(fh.read())
+
+    results = [x[0]['predictions'] for x in page]
+
+    # Separating the result if it spans over more than 1 token
+    new_results = []
+    for line in results:
+        new_line = []
+        for each in line:
+            context = each['context']
+            tokens = context.split(' ')
+            start = each['start']
+            label = each['label']
+            for token in tokens:
+                end = len(token) + start
+                start = end + 1
+                new_line.append([token, start, end, label])
+        new_results.append(new_line)
+
+    return new_results
+
+
 def infer():
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -83,7 +108,7 @@ def infer():
     model = Inferencer.load(MODEL_DIR)
     # result1 = model.inference_from_dicts(dicts=basic_texts)
     results = []
-    for text in basic_texts[:10]:
+    for text in basic_texts:
         result = model.inference_from_dicts(dicts=[text])
         results.append(result)
     pprint.pprint(results)
@@ -102,3 +127,4 @@ if __name__ == "__main__":
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
     infer()
+    # json_to_list("test_infer_01.json")
