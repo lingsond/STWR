@@ -165,7 +165,7 @@ def infer():
         results.append(result)
     # pprint.pprint(results)
     filename = 'infer_ner_konvens2020_direct_lmgot01.json'
-    with open(filename, 'w') as fh:
+    with open(filename, 'w', encoding='utf-8') as fh:
         fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
     #     json.dump(result, fh, indent=2)
