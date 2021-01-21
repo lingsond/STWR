@@ -89,7 +89,7 @@ def infer():
     # with open("test_infer.json", 'w') as fh:
     #     json.dump(result, fh, indent=2)
 
-    # model.close_multiprocessing_pool()
+    model.close_multiprocessing_pool()
 
 
 if __name__ == "__main__":
