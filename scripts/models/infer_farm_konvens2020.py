@@ -27,7 +27,7 @@ else:
     use_cuda = True
 DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/direct/"
 # MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_bert-hgcrw_direct"
-MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot02_direct"
+MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot01_direct"
 # MODEL_DIR = 'bert-base-german-cased'
 
 
@@ -164,7 +164,7 @@ def infer():
         result = model.inference_from_dicts(dicts=[text])
         results.append(result)
     # pprint.pprint(results)
-    filename = 'infer_ner_konvens2020_direct_lmgot02.json'
+    filename = 'infer_ner_konvens2020_direct_lmgot01.json'
     with open(filename, 'w') as fh:
         fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
