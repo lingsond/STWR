@@ -1,0 +1,66 @@
+### Seed    = 42
+### Epochs  = 10
+### Dropout = 0.1
+
+### LR: 1e-6 ###
+ _________ ner _________
+02/03/2021 18:18:03 - INFO - farm.eval -   loss: 5.937912140679879
+02/03/2021 18:18:03 - INFO - farm.eval -   task_name: ner
+02/03/2021 18:18:03 - INFO - farm.eval -   seq_f1: 0.5360824742268042
+02/03/2021 18:18:03 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.49      0.68      0.57      1411
+micro avg       0.44      0.68      0.54      1411
+macro avg       0.49      0.68      0.57      1411
+
+### LR: 5e-6 ###
+ _________ ner _________
+02/03/2021 18:55:33 - INFO - farm.eval -   loss: 15.498417410105931
+02/03/2021 18:55:33 - INFO - farm.eval -   task_name: ner
+02/03/2021 18:55:33 - INFO - farm.eval -   seq_f1: 0.5822784810126581
+02/03/2021 18:55:33 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.55      0.70      0.62      1411
+micro avg       0.50      0.70      0.58      1411
+macro avg       0.55      0.70      0.62      1411
+
+### LR: 1e-5 ###
+ _________ ner _________
+02/03/2021 19:33:17 - INFO - farm.eval -   loss: 17.93219902637963
+02/03/2021 19:33:17 - INFO - farm.eval -   task_name: ner
+02/03/2021 19:33:17 - INFO - farm.eval -   seq_f1: 0.6295281582952815
+02/03/2021 19:33:17 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.60      0.73      0.66      1411
+micro avg       0.55      0.73      0.63      1411
+macro avg       0.60      0.73      0.66      1411
+
+### LR: 5e-5 ###
+ _________ ner _________
+02/03/2021 20:11:03 - INFO - farm.eval -   loss: 18.382093895447216
+02/03/2021 20:11:03 - INFO - farm.eval -   task_name: ner
+02/03/2021 20:11:03 - INFO - farm.eval -   seq_f1: 0.6677018633540373
+02/03/2021 20:11:03 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.64      0.76      0.70      1411
+micro avg       0.59      0.76      0.67      1411
+macro avg       0.64      0.76      0.70      1411
+
+### LR: 1e-4 ###
+ _________ ner _________
+02/03/2021 20:48:59 - INFO - farm.eval -   loss: 17.44725944347842
+02/03/2021 20:48:59 - INFO - farm.eval -   task_name: ner
+02/03/2021 20:49:00 - INFO - farm.eval -   seq_f1: 0.6483103879849813
+02/03/2021 20:49:00 - INFO - farm.eval -   report:
+            precision    recall  f1-score   support
+      DIR       0.63      0.73      0.68      1411
+micro avg       0.58      0.73      0.65      1411
+macro avg       0.63      0.73      0.68      1411
+
+Summary for directed speech
+            precision    recall  f1-score   support
+1e-6            0.49      0.68      0.57      1411
+5e-6            0.55      0.70      0.62      1411
+1e-5            0.60      0.73      0.66      1411
+5e-5            0.64      0.76      0.70      1411
+1e-4            0.63      0.73      0.68      1411
