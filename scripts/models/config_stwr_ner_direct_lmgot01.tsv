@@ -1,0 +1,6 @@
+exp_id	seed	epochs	batch_size	evaluate_every	data_dir	model_base_dir	lm	task	dropout	learning_rate
+111	42	10	32	1000	data/03_processed/Konvens2020/	models/konvens2020/stwr_ner/	lmgot01	direct	0.1	1e-6
+112	42	10	32	1000	data/03_processed/Konvens2020/	models/konvens2020/stwr_ner/	lmgot01	direct	0.1	5e-6
+113	42	10	32	1000	data/03_processed/Konvens2020/	models/konvens2020/stwr_ner/	lmgot01	direct	0.1	1e-5
+114	42	10	32	1000	data/03_processed/Konvens2020/	models/konvens2020/stwr_ner/	lmgot01	direct	0.1	5e-5
+115	42	10	32	1000	data/03_processed/Konvens2020/	models/konvens2020/stwr_ner/	lmgot01	direct	0.1	1e-4
