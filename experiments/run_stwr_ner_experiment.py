@@ -6,6 +6,7 @@ import pprint
 import json
 from types import SimpleNamespace
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
 from stwr.stwr_ner import stwr_tag
 from stwr.utils import read_config_experiments
 

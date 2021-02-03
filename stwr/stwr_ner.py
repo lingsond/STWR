@@ -1,6 +1,7 @@
 import os
 import logging
 from pathlib import Path
+from decimal import Decimal
 
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import NERProcessor
@@ -84,7 +85,7 @@ def stwr_tag(args):
     # b) and a prediction head on top that is suited for our task => NER
     prediction_head = TokenClassificationHead(num_labels=len(ner_labels))
 
-    dropout = int(args.dropout)
+    dropout = Decimal(args.dropout)
     model = AdaptiveModel(
         language_model=language_model,
         prediction_heads=[prediction_head],
@@ -94,7 +95,7 @@ def stwr_tag(args):
     )
 
     # 5. Create an optimizer
-    learning_rate = float(args.learning_rate)
+    learning_rate = Decimal(args.learning_rate)
     model, optimizer, lr_schedule = initialize_optimizer(
         model=model,
         learning_rate=learning_rate,
