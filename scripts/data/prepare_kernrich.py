@@ -22,12 +22,13 @@ def combine_raw_to_interim():
     tasks = ["train", "dev", "test"]
     # tasks = ['train']
     for task in tasks:
-        print(f"Processing files for {task} set...")
+        # print(f"Processing files for {task} set...")
         raw_dir = RAW_DIR + task + '/'
         files = [raw_dir + file for file in os.listdir(raw_dir) if file.endswith('.tsv')]
 
         content = ["-DOCSTART- -X- -X- O"]
         for file in tqdm(files):
+            print(f"Processing file: {file}")
             with open(file, 'r', encoding='utf-8') as fh:
                 page = fh.readlines()
 
