@@ -39,9 +39,12 @@ def combine_raw_to_interim():
                 text = line.strip().split('\t')
                 # Column to be extracted:
                 # 0: token, 1: speech, 4: sentstart
-                token = text[0]
-                speech = text[1]
-                start = text[4]
+                try:
+                    token = text[0]
+                    speech = text[1]
+                    start = text[4]
+                except IndexError:
+                    print(line)
 
                 # Add new empty row if it's beginning of sentence
                 if start.strip() == 'start':
