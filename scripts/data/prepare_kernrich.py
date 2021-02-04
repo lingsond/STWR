@@ -20,7 +20,7 @@ TARGET_DIR = BASE_DIR + "03_processed/kern_rich/farm/"
 
 def combine_raw_to_interim():
     tasks = ["train", "dev", "test"]
-    tasks = ['train']
+    # tasks = ['train']
     for task in tasks:
         print(f"Processing files for {task} set...")
         raw_dir = RAW_DIR + task + '/'
