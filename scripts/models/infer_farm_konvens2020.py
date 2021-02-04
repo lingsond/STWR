@@ -28,7 +28,7 @@ else:
 DATA_DIR = BASE_DIR + "data/03_processed/Konvens2020/direct/"
 # MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_bert-hgcrw_direct"
 # MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_lmgot01_direct"
-MODEL_DIR = BASE_DIR + "models/farm-ner-konvens2020_direct"
+MODEL_DIR = BASE_DIR + "models/konvens2020/stwr_ner/"
 
 
 def test_file_to_dict(testfile: str = 'test', extension: str = 'txt', sep: str = '\t'):
@@ -133,9 +133,10 @@ def fill_prediction_list(pred, real):
     return pred_list, label_list
 
 
-def scoring_result():
+def scoring_result(xid):
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    pred_result = json_to_list("infer_ner_konvens2020_direct_bert-gc.json")
+    filename = "infer_konvens2020_direct_" + xid + ".json"
+    pred_result = json_to_list(filename)
     real_list = text_to_list(basic_texts)
     pred_text, pred_label = fill_prediction_list(pred_result, real_list)
 
@@ -151,20 +152,21 @@ def scoring_result():
     print(f'Recall   : {recall}')
 
 
-def infer():
+def infer(xid):
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO,
     )
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    model = Inferencer.load(MODEL_DIR)
+    model_dir = MODEL_DIR + xid
+    model = Inferencer.load(model_dir)
     results = []
     for text in basic_texts:
         result = model.inference_from_dicts(dicts=[text])
         results.append(result)
     # pprint.pprint(results)
-    filename = 'infer_ner_konvens2020_direct_bert-gc.json'
+    filename = 'infer_konvens2020_direct_' + xid + '.json'
     with open(filename, 'w', encoding='utf-8') as fh:
         fh.write(pprint.pformat(results, indent=2))
     # with open("test_infer.json", 'w') as fh:
@@ -174,10 +176,10 @@ def infer():
 
 
 if __name__ == "__main__":
-    #task = sys.argv[1]
+    exp_id = sys.argv[1]
     #lang_model = sys.argv[2]
     # Parameter1 can be '', 'direct', 'indirect', 'reported'
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
-    # infer()
-    scoring_result()
+    infer(exp_id)
+    scoring_result(exp_id)
