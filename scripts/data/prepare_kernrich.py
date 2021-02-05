@@ -27,6 +27,8 @@ def combine_raw_to_interim():
         files = [raw_dir + file for file in os.listdir(raw_dir) if file.endswith('.tsv')]
 
         content = ["-DOCSTART- -X- -X- O"]
+        context = []
+        broken = False
         for file in tqdm(files):
             print(f"Processing file: {file}")
             with open(file, 'r', encoding='utf-8') as fh:
@@ -43,12 +45,19 @@ def combine_raw_to_interim():
                     token = text[0]
                     speech = text[1]
                     start = text[4]
-                except IndexError:
-                    print(line)
+                except:
+                    broken = True
+                    continue
 
                 # Add new empty row if it's beginning of sentence
-                if start.strip() == 'start':
-                    content.append('')
+                if start.strip() == 'start' and len(context) > 0:
+                    if not broken:
+                        content.extend(context)
+                        context = []
+                        content.append('')
+                    else:
+                        context = []
+                        broken = False
 
                 # Change cat into intended labels:
                 # direct -> DIR, indirect -> IND, reported -> REP, x -> O
@@ -59,7 +68,7 @@ def combine_raw_to_interim():
 
                 # Create new data row
                 new_data = token + '\tO\tO\t' + speech
-                content.append(new_data)
+                context.append(new_data)
 
         filename = INTERIM_DIR + 'farm_' + task + '.tsv'
         with open(filename, 'w', encoding='utf-8') as fh:
