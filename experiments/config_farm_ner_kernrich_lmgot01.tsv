@@ -1,2 +1,2 @@
 exp_id	seed	epochs	batch_size	evaluate_every	data_dir	model_base_dir	lm	task	dropout	learning_rate
-001	42	1	32	5000	data/03_processed/kern_rich/farm/	models/kernrich/farm/	lmgot01	direct	0.1	1e-5
+001	42	8	32	5950	data/03_processed/kern_rich/farm/	models/kernrich/farm/	lmgot01	direct	0.1	1e-5

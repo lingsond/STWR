@@ -16,4 +16,4 @@ if __name__ == "__main__":
     configs = read_config_experiments(config_file)
     for config in configs:
         args = SimpleNamespace(**config)
-        stwr_tag(args)
+        stwr_tag('kernrich', args)

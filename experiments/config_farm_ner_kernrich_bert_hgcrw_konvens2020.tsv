@@ -1,0 +1,2 @@
+exp_id	seed	epochs	batch_size	evaluate_every	data_dir	model_base_dir	lm	task	dropout	learning_rate
+006	42	8	32	5950	data/03_processed/kern_rich/farm/	models/kernrich/farm/	/home/stud/wangsadirdja/STWR/models/farm-ner-konvens2020_bert-hgcrw_direct/	direct	0.1	1e-5

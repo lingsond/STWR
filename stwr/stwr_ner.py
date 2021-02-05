@@ -22,7 +22,7 @@ else:
     use_cuda = True
 
 
-def stwr_tag(args):
+def stwr_tag(project: str, args):
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -47,6 +47,9 @@ def stwr_tag(args):
         lang_model = Path("/home/stud/wangsadirdja/pyfarmbert/models/lm/lmgot_02")
     elif args.lm == 'bert-gc':
         lang_model = "bert-base-german-cased"
+    elif args.lm[:5] == 'stwr-':
+        xid = args.lm[5:]
+        lang_model = Path("/home/stud/wangsadirdja/STWR/models/konvens2020/stwr_ner" + xid)
     else:
         lang_model = Path(args.lm)
 
@@ -69,9 +72,9 @@ def stwr_tag(args):
         ner_labels = ["[PAD]", "X", "O", "B-DIR", "I-DIR", "B-IND", "I-IND", "B-REP", "I-REP"]
 
     data_dir = BASE_DIR + args.data_dir
-    if args.task != 'all':
-        # data_dir += args.task + '/'
-        pass
+    if args.task != 'all' and project == 'konvens2020':
+        data_dir += args.task + '/'
+
     processor = NERProcessor(
         tokenizer=tokenizer, max_seq_len=64, data_dir=Path(data_dir), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
