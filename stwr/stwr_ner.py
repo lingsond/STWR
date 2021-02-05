@@ -70,7 +70,8 @@ def stwr_tag(args):
 
     data_dir = BASE_DIR + args.data_dir
     if args.task != 'all':
-        data_dir += args.task + '/'
+        # data_dir += args.task + '/'
+        pass
     processor = NERProcessor(
         tokenizer=tokenizer, max_seq_len=64, data_dir=Path(data_dir), delimiter="\t", metric="seq_f1", label_list=ner_labels
     )
