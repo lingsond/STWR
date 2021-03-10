@@ -9,6 +9,7 @@ import numpy as np
 import sklearn
 from flair.data import Sentence
 from flair.models import SequenceTagger
+from tqdm import tqdm
 
 
 if os.name == 'nt':
@@ -63,6 +64,18 @@ def test_file_to_dict(testfile: str = 'test', extension: str = 'txt', sep: str =
     for line in text:
         data.append({"text": line})
     return data, token_list, label_list
+
+
+def tsv_to_list(filename: str) -> list:
+    with open(filename, 'r', encoding='utf-8') as fh:
+        page = fh.readlines()
+
+    results = []
+    for line in page:
+        items = line.strip().split('\t')
+        results.append([items[0], items[1]])
+
+    return results
 
 
 def json_to_list(filename: str) -> list:
@@ -130,12 +143,28 @@ def fill_prediction_list(pred, real):
     return pred_list, label_list
 
 
-def scoring_result(xid):
+def format_redewiedergabe_to_farm(results):
+    pred_list = []
+    label_list = []
+
+    for result in results:
+        pred_list.append(result[0])
+        # Change direct to DIR, and x to O
+        label = result[1]
+        if label == 'direct':
+            label = 'DIR'
+        else:
+            label = 'O'
+        label_list.append(label)
+
+    return pred_list, label_list
+
+def scoring_result():
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    filename = "infer_konvens2020_direct_" + xid + ".json"
-    pred_result = json_to_list(filename)
-    real_list = text_to_list(basic_texts)
-    pred_text, pred_label = fill_prediction_list(pred_result, real_list)
+    filename = 'results_infer_flair_konvens2020_direct.tsv'
+    pred_result = tsv_to_list(filename)
+    # real_list = text_to_list(basic_texts)
+    pred_text, pred_label = format_redewiedergabe_to_farm(pred_result)
 
     fscore = np.round(
         sklearn.metrics.f1_score(pred_label, golden_label, pos_label='DIR'), 2)
@@ -161,7 +190,7 @@ def infer():
 
     results = []
     texts = [x['text'] for x in basic_texts]
-    for text in texts:
+    for text in tqdm(texts):
         sentence = Sentence(text)
         tagger.predict(sentence)
         for token in sentence:
@@ -190,6 +219,4 @@ if __name__ == "__main__":
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
     # infer(exp_id)
-    # scoring_result(exp_id)
-
-    infer()
+    scoring_result()
