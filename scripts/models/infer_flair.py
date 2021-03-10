@@ -164,16 +164,13 @@ def infer():
     for text in texts:
         sentence = Sentence(text)
         tagger.predict(sentence)
-        result = model.inference_from_dicts(dicts=[text])
-        results.append(result)
+        for token in sentence:
+            result = token.text + '\t' + token.labels[0].value + '\n'
+            results.append(result)
     # pprint.pprint(results)
-    filename = 'infer_konvens2020_direct_' + xid + '.json'
+    filename = 'results_infer_flair_konvens2020_direct.tsv'
     with open(filename, 'w', encoding='utf-8') as fh:
-        fh.write(pprint.pformat(results, indent=2))
-    # with open("test_infer.json", 'w') as fh:
-    #     json.dump(result, fh, indent=2)
-
-    model.close_multiprocessing_pool()
+        fh.writelines(results)
 
 
 def testing():
@@ -195,4 +192,4 @@ if __name__ == "__main__":
     # infer(exp_id)
     # scoring_result(exp_id)
 
-    testing()
+    infer()

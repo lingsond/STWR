@@ -29,7 +29,7 @@ def parse_farm_text(pfile):
 
 
 def testing():
-    t = SequenceTagger.load('de-historic-direct')
+    t = SequenceTagger.load('ner')
     sentences = [
         'Ich liebe Berlin.',
         'George Washington gang nach Washington.',
