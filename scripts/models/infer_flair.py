@@ -75,6 +75,20 @@ def tsv_to_list(filename: str) -> list:
         items = line.strip().split('\t')
         results.append([items[0], items[1]])
 
+    # i = 0
+    # new_results = []
+    # while i < len(results):
+    #     # Check 's
+    #     if results[i][0] == "'s":
+    #         new_results[-1][0] += "'s"
+    #         i += 1
+    #     elif results[i][0] == "'" and results[i+1][0] == 's':
+    #         new_results.append(["'s", results[i][1]])
+    #         i += 2
+    #     else:
+    #         new_results.append(results[i])
+    #         i += 1
+
     return results
 
 
@@ -202,14 +216,45 @@ def infer():
         fh.writelines(results)
 
 
-def testing():
+def correcting_result_file():
     basic_texts, golden_list, golden_label = test_file_to_dict()
-    print('basic_texts')
-    #pprint(basic_texts)
-    print('golden_list')
-    # pprint(golden_list)
-    print('golden_label')
-    pprint(golden_label)
+    filename = 'results_infer_flair_konvens2020_direct.tsv'
+    pred_result = tsv_to_list(filename)
+
+    i = 0
+    new_results = []
+    symbols = ['/', '-']
+    while i < len(golden_list):
+        if golden_list[i] == pred_result[i][0]:
+            new_results.append(pred_result[i])
+        else:
+            token1 = pred_result[i][0] + pred_result[i+1][0]
+            token2 = token1 + pred_result[i+2][0]
+            token3 = token2 + pred_result[i+3][0]
+            label = pred_result[i][1]
+            #if golden_list[i] == '&amp;' or pred_result[i+1][0] in symbols:
+            if golden_list[i] == token1:
+                new_results.append([token1, label])
+                del pred_result[i+1]
+            elif golden_list[i] == token2:
+                new_results.append([token1, label])
+                del pred_result[i+1:i+3]
+            elif golden_list[i] == token3:
+                new_results.append([token3, label])
+                del pred_result[i+1:i+4]
+            else:
+                print(i)
+                print(golden_list[i], pred_result[i][0])
+                break
+
+        i += 1
+
+    if len(golden_list) == len(new_results):
+        with open(filename, 'w', encoding='utf-8') as fh:
+            for line in new_results:
+                text = '\t'.join(line) + '\n'
+                fh.write(text)
+    print(len(golden_list), len(new_results))
 
 
 if __name__ == "__main__":
@@ -218,5 +263,7 @@ if __name__ == "__main__":
     # Parameter1 can be '', 'direct', 'indirect', 'reported'
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
-    infer()
+    # infer()
+    # correcting_result_file()
     scoring_result()
+

@@ -181,5 +181,5 @@ if __name__ == "__main__":
     # Parameter1 can be '', 'direct', 'indirect', 'reported'
     # Parameter2 can be 'lmgot01', 'lmgot02', 'bert-hgcrw', 'bert-gc'
     #ner(task, lang_model)
-    infer(exp_id)
+    # infer(exp_id)
     scoring_result(exp_id)
